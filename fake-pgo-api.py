@@ -1,15 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# from random import randint, getrandbits, seed
-# from uuid import uuid4
-# from time import time
-# from s2sphere import CellId, LatLng
-# import struct
-# import geopy
-# from geopy.distance import VincentyDistance
-# from geopy.distance import vincenty
-# from .utils import get_args
+'''
+Fake PokemonGo API
+
+This is a simplistic flask app to emulate what a pokemon go api returns.
+
+It *does not* speak protobuff, and uses a hacky internal re-routing. That said,
+it does the trick well enough in my testing.
+
+When first "logged into" it will create a static map of evenly distributed
+gyms and poke stops. As each "scan" is run, it will gerenate a set of pokemon
+for that scan area. "New" pokemon will be found every 10 minutes.
+
+You can run this as is, and then just add `-w http://127.0.0.1:9090` to your
+runserver.py call to start using it.
+'''
 
 import logging
 import configargparse
@@ -69,7 +75,7 @@ def getForts(location):
     return lforts
 
 def makeWildPokemon(location):
-    # Cause the randomness to only shift every 5 minutes (thus new pokes every 5 minutes)
+    # Cause the randomness to only shift every N minutes (thus new pokes every N minutes)
     offset = int(time() % 3600) / 10
     seedid = str(location[0]) + str(location[1]) + str(offset)
     seed(seedid)
