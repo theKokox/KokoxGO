@@ -33,6 +33,7 @@ from pgoapi.exceptions import AuthException
 
 from .models import parse_map, Pokemon
 from .utils import Timer
+from .fakePogoApi import FakePogoApi
 
 log = logging.getLogger(__name__)
 
@@ -225,7 +226,11 @@ def search_worker_thread(args, account, search_items_queue, parse_lock, encrypti
             log.debug('Entering search loop')
 
             # Create the API instance this will use
-            api = PGoApi()
+            if args.mock != '':
+                api = FakePogoApi(args.mock)
+            else:
+                api = PGoApi()
+
             if args.proxy:
                 api.set_proxy({'http': args.proxy, 'https': args.proxy})
 
