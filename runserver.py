@@ -19,9 +19,9 @@ from flask_cache_bust import init_cache_busting
 
 from pogom import config
 from pogom.app import Pogom
-from pogom.utils import get_args, insert_mock_data, get_encryption_lib_path
+from pogom.utils import get_args, get_encryption_lib_path
 
-from pogom.search import search_overseer_thread, fake_search_loop
+from pogom.search import search_overseer_thread
 from pogom.models import init_database, create_tables, drop_tables, db_updater, clean_db_loop
 from pogom.webhook import wh_updater
 

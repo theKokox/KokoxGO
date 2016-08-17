@@ -32,7 +32,6 @@ from pgoapi import utilities as util
 from pgoapi.exceptions import AuthException
 
 from .models import parse_map, Pokemon
-from .utils import Timer
 from .fakePogoApi import FakePogoApi
 
 log = logging.getLogger(__name__)
@@ -41,7 +40,8 @@ TIMESTAMP = '\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\00
 
 
 def get_new_coords(init_loc, distance, bearing):
-    """ Given an initial lat/lng, a distance(in kms), and a bearing (degrees),
+    """
+    Given an initial lat/lng, a distance(in kms), and a bearing (degrees),
     this will calculate the resulting lat/lng coordinates.
     """
     R = 6378.1  # km radius of the earth
@@ -99,15 +99,6 @@ def generate_location_steps(initial_loc, step_count):
                     loc = get_new_coords(loc, xdist / 2, EAST)
                 yield (loc[0], loc[1], 0)
         ring += 1
-
-
-#
-# A fake search loop which does....nothing!
-#
-def fake_search_loop():
-    while True:
-        log.info('Fake search loop running')
-        time.sleep(10)
 
 
 # The main search loop that keeps an eye on the over all process
@@ -242,19 +233,13 @@ def search_worker_thread(args, account, search_items_queue, parse_lock, encrypti
             # The forever loop for the searches
             while True:
 
-                t = Timer('search')
-
                 # Grab the next thing to search (when available)
                 step, step_location = search_items_queue.get()
-
-                t.add('item')
 
                 log.info('Search step %d beginning (queue size is %d)', step, search_items_queue.qsize())
 
                 # Let the api know where we intend to be for this loop
                 api.set_position(*step_location)
-
-                t.add('setp')
 
                 # The loop to try very hard to scan this step
                 failed_total = 0
@@ -277,12 +262,8 @@ def search_worker_thread(args, account, search_items_queue, parse_lock, encrypti
                     # Ok, let's get started -- check our login status
                     check_login(args, account, api, step_location)
 
-                    t.add('login')
-
                     # Make the actual request (finally!)
                     response_dict = map_request(api, step_location)
-
-                    t.add('request')
 
                     # G'damnit, nothing back. Mark it up, sleep, carry on
                     if not response_dict:
@@ -294,9 +275,6 @@ def search_worker_thread(args, account, search_items_queue, parse_lock, encrypti
                     # Got the response, parse it out, send todo's to db/wh queues
                     try:
                         parse_map(args, response_dict, step_location, dbq, whq)
-
-                        t.add('parse map')
-
                         log.debug('Search step %s completed', step)
                         search_items_queue.task_done()
                         break  # All done, get out of the request-retry loop
@@ -305,8 +283,6 @@ def search_worker_thread(args, account, search_items_queue, parse_lock, encrypti
                         failed_total += 1
                         time.sleep(sleep_time)
 
-                t.checkpoint('search complete')
-
                 # If there's any time left between the start time and the time when we should be kicking off the next
                 # loop, hang out until its up.
                 sleep_delay_remaining = loop_start_time + (args.scan_delay * 1000) - int(round(time.time() * 1000))
@@ -314,10 +290,6 @@ def search_worker_thread(args, account, search_items_queue, parse_lock, encrypti
                     time.sleep(sleep_delay_remaining / 1000)
 
                 loop_start_time += args.scan_delay * 1000
-
-                t.add('delay')
-                if args.debug:
-                    t.output()
 
         # catch any process exceptions, log them, and continue the thread
         except Exception as e:

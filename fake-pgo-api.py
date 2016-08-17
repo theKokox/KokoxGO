@@ -19,7 +19,6 @@ runserver.py call to start using it.
 
 import logging
 import configargparse
-import os
 import math
 
 from flask import Flask, jsonify
@@ -27,7 +26,6 @@ from random import randint, getrandbits, seed, random
 from uuid import uuid4
 from time import time
 from s2sphere import CellId, LatLng
-import struct
 import geopy
 from geopy.distance import VincentyDistance
 from geopy.distance import vincenty
@@ -37,9 +35,9 @@ log = logging.getLogger()
 
 # Configish
 parser = configargparse.ArgParser()
-parser.add_argument('-H'  , '--host'     ,             help='Server Host'              , default='127.0.0.1')
-parser.add_argument('-p'  , '--port'     , type=int  , help='Server Port'              , default=9090)
-parser.add_argument('-d'  , '--debug'    ,             help='Debug Mode'               , action='store_true')
+parser.add_argument('-H', '--host', help='Server Host', default='127.0.0.1')
+parser.add_argument('-p', '--port', help='Server Port', default=9090, type=int)
+parser.add_argument('-d', '--debug', help='Debug Mode', action='store_true')
 parser.set_defaults(DEBUG=False)
 args = parser.parse_args()
 
@@ -52,12 +50,14 @@ else:
 # A holder of gyms/pokestops
 forts = []
 
+
 def getRandomPoint(location=None, maxMeters=70):
     origin = geopy.Point(location[0], location[1])
-    b = randint(0,360)
-    d = math.sqrt(random()) * (float(maxMeters) / 1000);
+    b = randint(0, 360)
+    d = math.sqrt(random()) * (float(maxMeters) / 1000)
     destination = VincentyDistance(kilometers=d).destination(origin, b)
     return (destination.latitude, destination.longitude)
+
 
 def getForts(location):
     global forts
@@ -71,6 +71,7 @@ def getForts(location):
 
     return lforts
 
+
 def makeWildPokemon(location):
     # Cause the randomness to only shift every N minutes (thus new pokes every N minutes)
     offset = int(time() % 3600) / 10
@@ -79,27 +80,29 @@ def makeWildPokemon(location):
 
     # Now, collect the pokes for this can point
     pokes = []
-    for i in range(randint(0,2)):
+    for i in range(randint(0, 2)):
         coords = getRandomPoint(location)
         ll = LatLng.from_degrees(coords[0], coords[1])
         cellId = CellId.from_lat_lng(ll).parent(20).to_token()
         pokes.append({
-            'encounter_id': 'pkm'+seedid+str(i),
+            'encounter_id': 'pkm' + seedid + str(i),
             'last_modified_timestamp_ms': int((time() - 10) * 1000),
             'latitude': coords[0],
             'longitude': coords[1],
-            'pokemon_data': { 'pokemon_id': randint(1,140) },
+            'pokemon_data': {'pokemon_id': randint(1, 140)},
             'spawn_point_id': cellId,
-            'time_till_hidden_ms': randint(60,600) * 1000
+            'time_till_hidden_ms': randint(60, 600) * 1000
         })
     return pokes
 
 # Fancy app time
 app = Flask(__name__)
 
+
 @app.route('/')
 def api_root():
     return 'This here be a Fake PokemonGo API Endpoint Server'
+
 
 @app.route('/login/<lat>/<lng>/<r>')
 def api_login(lat, lng, r):
@@ -110,7 +113,7 @@ def api_login(lat, lng, r):
         return jsonify(forts)
 
     # coerce types
-    r = int(r) # radius in meters
+    r = int(r)  # radius in meters
     lat = float(lat)
     lng = float(lng)
 
@@ -128,14 +131,14 @@ def api_login(lat, lng, r):
         coords = getRandomPoint(location=(lat, lng), maxMeters=r)
         forts.append({
             'enabled': True,
-            'guard_pokemon_id': randint(1,140),
-            'gym_points': randint(1,30000),
+            'guard_pokemon_id': randint(1, 140),
+            'gym_points': randint(1, 30000),
             'id': 'gym-{}'.format(i),
             'is_in_battle': not getrandbits(1),
             'last_modified_timestamp_ms': int((time() - 10) * 1000),
             'latitude': coords[0],
             'longitude': coords[1],
-            'owned_by_team': randint(0,3)
+            'owned_by_team': randint(0, 3)
         })
 
     # Pokestops
@@ -153,6 +156,7 @@ def api_login(lat, lng, r):
     log.info('Login for location %f,%f generated %d gyms, %d pokestop', lat, lng, gymCount, pksCount)
     return jsonify(forts)
 
+
 @app.route('/scan/<lat>/<lng>')
 def api_scan(lat, lng):
     location = (float(lat), float(lng))
@@ -162,12 +166,12 @@ def api_scan(lat, lng):
         cells.append({
             'current_timestamp_ms': int(time() * 1000),
             'forts': getForts(location),
-            's2_cell_id': uuid4(), # wrong, but also unused so it doesn't matter
+            's2_cell_id': uuid4(),  # wrong, but also unused so it doesn't matter
             'wild_pokemons': makeWildPokemon(location),
-            'catchable_pokemons': [], # unused
-            'nearby_pokemons': [] # unused
+            'catchable_pokemons': [],  # unused
+            'nearby_pokemons': []  # unused
         })
-    return jsonify({ 'responses': { 'GET_MAP_OBJECTS': { 'map_cells': cells } } })
+    return jsonify({'responses': {'GET_MAP_OBJECTS': {'map_cells': cells}}})
 
 if __name__ == '__main__':
     app.run(threaded=True, debug=args.debug, host=args.host, port=args.port)

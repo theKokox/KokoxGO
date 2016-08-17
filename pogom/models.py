@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 from base64 import b64encode
 
 from . import config
-from .utils import get_pokemon_name, get_pokemon_rarity, get_pokemon_types, get_args, Timer
+from .utils import get_pokemon_name, get_pokemon_rarity, get_pokemon_types, get_args
 from .transform import transform_from_wgs_to_gcj
 from .customLog import printPokemon
 
@@ -455,24 +455,13 @@ def db_updater(args, q):
             while True:
 
                 model, data = q.get()
-
-                t = Timer('dbupdate')
-
-                t.add('conn')
-
                 upserted = len(data)
                 bulk_upsert(model, data)
-
-                t.add('updt')
-
-                if args.debug:
-                    t.output()
-
                 q.task_done()
 
-                log.info('Upserted %d records into %s (upsert queue remaining: %d)',
-                         upserted,
+                log.info('Upserted to %s, %d records (upsert queue remaining: %d)',
                          model.__name__,
+                         upserted,
                          q.qsize())
 
         except Exception as e:
