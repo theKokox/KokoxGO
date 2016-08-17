@@ -371,7 +371,10 @@ def search_worker_thread_ss(args, account, search_items_queue, parse_lock, encry
         try:
             log.debug('Entering search loop')
             # create api instance
-            api = PGoApi()
+            if args.mock != '':
+                api = FakePogoApi(args.mock)
+            else:
+                api = PGoApi()
             if args.proxy:
                 api.set_proxy({'http': args.proxy, 'https': args.proxy})
             api.activate_signature(encryption_lib_path)
