@@ -9,6 +9,7 @@ import time
 import re
 import requests
 import ssl
+import json
 
 from distutils.version import StrictVersion
 
@@ -21,8 +22,8 @@ from pogom import config
 from pogom.app import Pogom
 from pogom.utils import get_args, get_encryption_lib_path
 
-from pogom.search import search_overseer_thread
-from pogom.models import init_database, create_tables, drop_tables, db_updater, clean_db_loop
+from pogom.search import search_overseer_thread, search_overseer_thread_ss
+from pogom.models import init_database, create_tables, drop_tables, Pokemon, db_updater, clean_db_loop
 from pogom.webhook import wh_updater
 
 # Currently supported pgoapi
@@ -173,9 +174,24 @@ if __name__ == '__main__':
 
     if not args.only_server:
         # Gather the pokemons!
-        search_thread = Thread(target=search_overseer_thread, args=(
-            args, new_location_queue, pause_bit, encryption_lib_path,
-            db_updates_queue, wh_updates_queue))
+        argset = (args, new_location_queue, pause_bit, encryption_lib_path, db_updates_queue, wh_updates_queue)
+        # check the sort of scan
+        if not args.spawnpoint_scanning:
+            log.debug('Starting a hex search thread')
+            search_thread = Thread(target=search_overseer_thread, args=argset)
+        # using -ss
+        else:
+            log.debug('Starting a sp search thread')
+            if args.dump_spawnpoints:
+                with open(args.spawnpoint_scanning, 'w+') as file:
+                    log.info('Exporting spawns')
+                    spawns = Pokemon.get_spawnpoints_in_hex(position, args.step_limit)
+                    file.write(json.dumps(spawns))
+                    file.close()
+                    log.info('Finished exporting spawns')
+            # start the scan sceduler
+            search_thread = Thread(target=search_overseer_thread_ss, args=argset)
+
         search_thread.daemon = True
         search_thread.name = 'search-overseer'
         search_thread.start()
