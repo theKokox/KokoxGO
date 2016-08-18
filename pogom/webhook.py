@@ -33,6 +33,8 @@ def wh_updater(args, q):
             while True:
                 whtype, message = q.get()
                 send_to_webhook(whtype, message)
+                if q.qsize() > 50:
+                    log.warning("Webhook queue is > 50; try increasing --wh-threads")
                 q.task_done()
         except Exception as e:
             log.exception('Exception in wh_updater: %s', e)

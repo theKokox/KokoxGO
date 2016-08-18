@@ -505,16 +505,15 @@ def db_updater(args, q):
 
             # Loop the queue
             while True:
-
                 model, data = q.get()
-                upserted = len(data)
                 bulk_upsert(model, data)
                 q.task_done()
-
                 log.info('Upserted to %s, %d records (upsert queue remaining: %d)',
                          model.__name__,
-                         upserted,
+                         len(data),
                          q.qsize())
+                if q.qsize() > 50:
+                    log.warning("DB queue is > 50; try increasing --db-threads")
 
         except Exception as e:
             log.exception('Exception in db_updater: %s', e)
@@ -527,7 +526,7 @@ def clean_db_loop():
             log.info('Regular database cleaning complete')
             time.sleep(60)
         except Exception as e:
-            log.exception('Exception in clean_db: %s', e)
+            log.exception('Exception in clean_db_loop: %s', e)
 
 
 def bulk_upsert(cls, data):

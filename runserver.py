@@ -151,13 +151,14 @@ if __name__ == '__main__':
     # DB Updates
     db_updates_queue = Queue()
 
-    # Thread to process database updates
-    db_updater_thread = Thread(target=db_updater, args=(args, db_updates_queue))
-    db_updater_thread.daemon = True
-    db_updater_thread.name = 'db-updater'
-    db_updater_thread.start()
+    # Thread(s) to process database updates
+    for i in range(args.db_threads):
+        log.debug('Starting db-updater worker thread %d', i)
+        t = Thread(target=db_updater, name='db-updater-{}'.format(i), args=(args, db_updates_queue))
+        t.daemon = True
+        t.start()
 
-    # db clearner
+    # db clearner; really only need one ever
     db_cleaner_thread = Thread(target=clean_db_loop)
     db_cleaner_thread.daemon = True
     db_cleaner_thread.name = 'db-cleaner'
@@ -167,10 +168,11 @@ if __name__ == '__main__':
     wh_updates_queue = Queue()
 
     # Thread to process webhook updates
-    wh_updater_thread = Thread(target=wh_updater, args=(args, wh_updates_queue))
-    wh_updater_thread.daemon = True
-    wh_updater_thread.name = 'webhooks'
-    wh_updater_thread.start()
+    for i in range(args.wh_threads):
+        log.debug('Starting wh-updater worker thread %d', i)
+        t = Thread(target=wh_updater, name='wh-updater-{}'.format(i), args=(args, wh_updates_queue))
+        t.daemon = True
+        t.start()
 
     if not args.only_server:
         # Gather the pokemons!

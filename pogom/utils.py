@@ -139,8 +139,12 @@ def get_args():
     parser.add_argument('--db-port', help='Port for the database', type=int, default=3306)
     parser.add_argument('--db-max_connections', help='Max connections (per thread) for the database',
                         type=int, default=5)
+    parser.add_argument('--db-threads', help='Number of db threads; increase if the db queue falls behind',
+                        type=int, default=1)
     parser.add_argument('-wh', '--webhook', help='Define URL(s) to POST webhook information to',
                         nargs='*', default=False, dest='webhooks')
+    parser.add_argument('--wh-threads', help='Number of webhook threads; increase if the webhook queue falls behind',
+                        type=int, default=1)
     parser.add_argument('--ssl-certificate', help='Path to SSL certificate file')
     parser.add_argument('--ssl-privatekey', help='Path to SSL private key file')
     parser.set_defaults(DEBUG=False)
