@@ -33,6 +33,18 @@ var noLabelsStyle = [{
   }]
 }, {
   'featureType': 'all',
+  'elementType': 'labels.text.stroke',
+  'stylers': [{
+    'visibility': 'off'
+  }]
+}, {
+  'featureType': 'all',
+  'elementType': 'labels.text.fill',
+  'stylers': [{
+    'visibility': 'off'
+  }]
+}, {
+  'featureType': 'all',
   'elementType': 'labels.icon',
   'stylers': [{
     'visibility': 'off'
@@ -1989,9 +2001,11 @@ $(function () {
     Store.set('startAtUserLocation', this.checked)
   })
 
-  $('#nav-accordion').accordion({
-    active: 0,
-    collapsible: true,
-    heightStyle: 'content'
-  })
+  if ($('#nav-accordion').length) {
+    $('#nav-accordion').accordion({
+      active: 0,
+      collapsible: true,
+      heightStyle: 'content'
+    })
+  }
 })
