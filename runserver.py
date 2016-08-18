@@ -159,10 +159,9 @@ if __name__ == '__main__':
         t.start()
 
     # db clearner; really only need one ever
-    db_cleaner_thread = Thread(target=clean_db_loop)
-    db_cleaner_thread.daemon = True
-    db_cleaner_thread.name = 'db-cleaner'
-    db_cleaner_thread.start()
+    t = Thread(target=clean_db_loop, name='db-cleaner')
+    t.daemon = True
+    t.start()
 
     # WH Updates
     wh_updates_queue = Queue()

@@ -238,7 +238,7 @@ def search_overseer_thread_ss(args, new_location_queue, pause_bit, encryption_li
     for i, account in enumerate(args.accounts):
         log.debug('Starting search worker thread %d for user %s', i, account['username'])
         t = Thread(target=search_worker_thread_ss,
-                   name='ss_search_worker_{}'.format(i),
+                   name='ss-worker-{}'.format(i),
                    args=(args, account, search_items_queue, parse_lock, encryption_lib_path, db_updates_queue, wh_queue))
         t.daemon = True
         t.start()
