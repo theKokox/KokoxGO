@@ -1,12 +1,12 @@
 <html>
 <head>
-	<title>Nearby Pokémon</title>
+	<title>Pokémon Cercano</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script>var pageLoaded = new Date().getTime();</script>
 	<link rel="stylesheet" href="{{ url_for('static', filename='dist/css/mobile.min.css').lstrip('/') }}" type="text/css" />
 </head>
 <body>
-	<h1>Nearby Pokémon</h1>
+	<h1>Pokémon Cercano</h1>
 
 	<ol>
 {% for pokemon in pokemon_list[:20] %}
@@ -21,13 +21,13 @@
 	</ol>
 
 	<div id="nav">
-		<button>Refresh</button>
+		<button>Actualizar</button>
 		<div>
-			<label><input type="checkbox" id="use-loc">Use device location</label>
+			<label><input type="checkbox" id="use-loc">Usar ubicación del dispositivo</label>
 		</div>
 	</div>
 
-	<a class="origin" href='geo:0,0?q={{origin_lat}},{{origin_lng}}(origin)'>origin location</a>
+	<a class="origin" href='geo:0,0?q={{origin_lat}},{{origin_lng}}(origin)'>posición de origen</a>
 
 	<script src="{{ url_for('static', filename='dist/js/mobile.min.js').lstrip('/') }}"></script>
 </body>
