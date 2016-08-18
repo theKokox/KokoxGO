@@ -36,14 +36,14 @@
     <div class="wrapper">
       <!-- Header -->
       <header id="header">
-        <a href="#nav"><span class="label">Options</span></a>
-        <h1><a href="#">Pokémon Go Map</a></h1>
-        <a href="#stats" id="statsToggle" class="statsNav" style="float: right;"><span class="label">Stats</span></a>
+        <a href="#nav"><span class="label">Opciones</span></a>
+        <h1><a href="#">Pokémon Go Map by Kokox 1.2</a></h1>
+        <a href="#stats" id="statsToggle" class="statsNav" style="float: right;"><span class="label">Estadisticas</span></a>
       </header>
       <!-- NAV -->
       <nav id="nav">
         <div id="nav-accordion">
-          <h3>Marker Settings</h3>
+          <h3>Opciones de Marcador</h3>
           <div>
             <div class="form-control switch-container">
               <h3>Pokémon</h3>
@@ -77,12 +77,12 @@
             </div>
             <div class="form-control switch-container" id="lured-pokestops-only-wrapper" style="display:none">
               <select name="lured-pokestops-only-switch" id="lured-pokestops-only-switch">
-                <option value="0">All</option>
-                <option value="1">Only Lured</option>
+                <option value="0">Todos</option>
+                <option value="1">Solo lureados</option>
               </select>
             </div>
             <div class="form-control switch-container">
-              <h3>Scanned Locations</h3>
+              <h3>Locaciones escaneadas</h3>
               <div class="onoffswitch">
                 <input id="scanned-switch" type="checkbox" name="scanned-switch" class="onoffswitch-checkbox">
                 <label class="onoffswitch-label" for="scanned-switch">
@@ -92,7 +92,7 @@
               </div>
             </div>
             <div class="form-control switch-container">
-              <h3>Spawn Points</h3>
+              <h3>Puntos de Aparicion</h3>
               <div class="onoffswitch">
                 <input id="spawnpoints-switch" type="checkbox" name="spawnpoints-switch" class="onoffswitch-checkbox">
                 <label class="onoffswitch-label" for="spawnpoints-switch">
@@ -103,7 +103,7 @@
             </div>
             <div class="form-control">
               <label for="exclude-pokemon">
-              <h3>Hide Pokémon</h3>
+              <h3>Esconder Pokémon</h3>
               <div style="max-height:165px;overflow-y:auto">
                 <select id="exclude-pokemon" multiple="multiple"></select>
               </div>
@@ -111,11 +111,11 @@
             </div>
           </div>
 
-          <h3>Location Settings</h3>
+          <h3>Opciones de Locación</h3>
           <div>
             <div class="form-control switch-container" style="display:{{is_fixed}}" >
               <label for="next-location">
-              <h3>Change scan location</h3>
+              <h3>Cambiar locación escaneada</h3>
               <input id="next-location" type="text" name="next-location" placeholder="Change your location">
               </label>
             </div>
@@ -140,7 +140,7 @@
               </div>
             </div>
             <div class="form-control switch-container" >
-              <h3>Start at user's location</h3>
+              <h3>Empezar en mi ubicación</h3>
               <div class="onoffswitch">
                 <input id="start-at-user-location-switch" type="checkbox" name="start-at-user-location-switch" class="onoffswitch-checkbox" checked/>
                 <label class="onoffswitch-label" for="start-at-user-location-switch">
@@ -150,7 +150,7 @@
               </div>
             </div>
             <div class="form-control switch-container" style="display:{{search_control}}">
-              <h3>Search</h3>
+              <h3>Buscar</h3>
               <div class="onoffswitch">
                 <input id="search-switch" type="checkbox" name="search-switch" class="onoffswitch-checkbox" checked/>
                 <label class="onoffswitch-label" for="search-switch">
@@ -161,11 +161,11 @@
             </div>
           </div>
 
-          <h3>Notification Settings</h3>
+          <h3>Opciones de Notificacion</h3>
           <div>
             <div class="form-control">
               <label for="notify-pokemon">
-                <h3>Notify of Pokémon</h3>
+                <h3>Notificar mi Pokémon</h3>
                 <div style="max-height:165px;overflow-y:auto">
                   <select id="notify-pokemon" multiple="multiple"></select>
                 </div>
@@ -173,14 +173,14 @@
             </div>
             <div class="form-control">
               <label for="notify-rarity">
-                <h3>Notify of Rarity</h3>
+                <h3>Notificación de Rareza</h3>
                 <div style="max-height:165px;overflow-y:auto">
                   <select id="notify-rarity" multiple="multiple"></select>
                 </div>
               </label>
             </div>
             <div class="form-control switch-container">
-              <h3>Notify with sound</h3>
+              <h3>Notificar con sonido</h3>
               <div class="onoffswitch">
                 <input id="sound-switch" type="checkbox" name="sound-switch" class="onoffswitch-checkbox" checked>
                 <label class="onoffswitch-label" for="sound-switch">
@@ -191,10 +191,10 @@
             </div>
           </div>
 
-          <h3>Style Settings</h3>
+          <h3>Opciones de Estilo</h3>
           <div>
             <div class="form-control switch-container">
-              <h3>Map Style</h3>
+              <h3>Estilo de Mapa</h3>
               <select id="map-style"></select>
             </div>
             <div class="form-control switch-container">
@@ -202,16 +202,16 @@
               <select name="pokemon-icons" id="pokemon-icons"></select>
             </div>
             <div class="form-control switch-container">
-              <h3>Icon Size</h3>
+              <h3>Tamaño de Icono</h3>
               <select name="pokemon-icon-size" id="pokemon-icon-size">
-                <option value="-8">Small</option>
+                <option value="-8">Pequeño</option>
                 <option value="0">Normal</option>
-                <option value="10">Large</option>
-                <option value="20">X-Large</option>
+                <option value="10">Grande</option>
+                <option value="20">X-Grande</option>
               </select>
             </div>
             <div class="form-control switch-container">
-              <h3>Search Icon Marker</h3>
+              <h3>Buscar Marcador</h3>
               <select name="iconmarker-style" id="iconmarker-style"></select>
             </div>
           </div>
@@ -220,10 +220,10 @@
       <nav id="stats">
         <div class="switch-container">
           <div class="switch-container">
-            <center><h1 id="stats-pkmn-label">Loading...</h1></center>
+            <center><h1 id="stats-pkmn-label">Cargando...</h1></center>
           </div>
           <div id="pokemonList" style="color: black;"></div>
-          <div><a href="stats">Full Stats</a></div>
+          <div><a href="stats">Estadísticas Completas</a></div>
           <div class="switch-container">
             <center><h1 id="stats-gym-label"></h1></center>
           </div>
