@@ -59,6 +59,11 @@ def getRandomPoint(location=None, maxMeters=70):
     return (destination.latitude, destination.longitude)
 
 
+# TODO: This method is suuuuper inefficient.
+#       Namely, it loops over EVERY POSSIBLE fort and does a distance calc
+#       Not a time-cheap operation to do at all. It would be way more efficient
+#       if we had all the forts setup with s2 locations and could more quickly
+#       query for 'within XYZ cells'. Or something like that :/
 def getForts(location):
     global forts
 
