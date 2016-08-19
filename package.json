@@ -39,7 +39,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PokemonGoMap/PokemonGo-Map.git"
+    "url": "git+https://github.com/loquendomia/KokoxGO.git"
   },
   "keywords": [
     "Pokemon",
@@ -48,7 +48,7 @@
   "author": "Carl Taylor",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PokemonGoMap/PokemonGo-Map/issues"
+    "url": "https://github.com/loquendomia/KokoxGO/issues"
   },
-  "homepage": "https://github.com/PokemonGoMap/PokemonGo-Map#readme"
+  "homepage": "https://github.com/loquendomia/KokoxGO#readme"
 }
